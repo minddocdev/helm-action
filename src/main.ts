@@ -29,6 +29,7 @@ async function run() {
     const chartValueFiles = getValueFiles(core.getInput('chartValueFiles'));
     const githubEmail = core.getInput('githubEmail') || 'android18@minddoc.de';
     const githubUser = core.getInput('githubUser') || 'minddocbot';
+    const githubUsername = core.getInput('githubUser') || 'Android 18';
     const githubToken = core.getInput('githubToken');
     const publish = core.getInput('publish') === 'true' || false;
     const releasesLocation = core.getInput('releasesLocation') || 'helm/releases';
@@ -67,7 +68,8 @@ async function run() {
       if (exec(`helm repo index "${releasesLocation}/${chartName}"`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be indexed in the desired repo`);
       }
-      exec(`git config --local github.user ${githubUser}`);
+      exec(`git config --local user.name ${githubUsername}`);
+      exec(`git config --local user.email ${githubEmail}`);
       exec(`git config --local github.email ${githubEmail}`);
       exec(`git config --local github.user ${githubUser}`);
       const version = exec(
