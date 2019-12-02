@@ -29,7 +29,7 @@ async function run() {
     const chartValueFiles = getValueFiles(core.getInput('chartValueFiles'));
     const githubEmail = core.getInput('githubEmail') || 'android18@minddoc.de';
     const githubUser = core.getInput('githubUser') || 'minddocbot';
-    const githubUsername = core.getInput('githubUser') || 'Android 18';
+    const githubUsername = core.getInput('githubUsername') || 'Android 18';
     const githubToken = core.getInput('githubToken');
     const publish = core.getInput('publish') === 'true' || false;
     const releasesLocation = core.getInput('releasesLocation') || 'helm/releases';

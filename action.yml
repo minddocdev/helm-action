@@ -1,33 +1,36 @@
-name: 'Helm'
-description: 'Helm check and publish'
-author: 'MindDoc GmbH'
+name: "Helm"
+description: "Helm check and publish"
+author: "MindDoc GmbH"
 inputs:
   chartsLocation:
-    description: 'Charts code location path'
-    default: 'helm/charts'
+    description: "Charts code location path"
+    default: "helm/charts"
   chartName:
-    description: 'The name of the chart to check'
+    description: "The name of the chart to check"
   chartValues:
-    description: 'The chart values to test'
+    description: "The chart values to test"
     required: false
   githubEmail:
-    description: 'The github email to commit with'
-    default: 'android18@minddoc.de'
+    description: "The github email to commit with"
+    default: "android18@minddoc.de"
   githubUser:
-    description: 'The github user to commit with'
-    default: 'minddocbot'
+    description: "The github user to commit with"
+    default: "minddocbot"
+  githubUsername:
+    description: "The github username to commit with"
+    default: "Android 18"
   githubToken:
-    description: 'The github token to use for pushing package commits'
+    description: "The github token to use for pushing package commits"
     required: false
   publish:
-    description: 'Package and publish chart'
+    description: "Package and publish chart"
     default: false
   releasesLocation:
-    description: 'Chart releases location path'
-    default: 'helm/releases'
+    description: "Chart releases location path"
+    default: "helm/releases"
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
 branding:
-  icon: 'cloud'
-  color: 'blue'
+  icon: "cloud"
+  color: "blue"
