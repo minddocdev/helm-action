@@ -73,7 +73,7 @@ async function run() {
       exec(`git config --local github.email ${githubEmail}`);
       exec(`git config --local github.user ${githubUser}`);
       const version = exec(
-        `helm inspect chart "${chartsLocation}/${chartName}" | grep version | tr -d 'version: ' `,
+        `helm inspect chart "${chartsLocation}/${chartName}" | grep ^version | tr -d 'version: ' `,
       ).stdout;
       core.info(`Preparing release commit for ${chartName} chart with version ${version}`);
       exec(oneLine`
