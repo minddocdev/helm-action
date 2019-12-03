@@ -65,7 +65,7 @@ async function run() {
       `).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be created`);
       }
-      if (exec(`helm repo index "${releasesLocation}/${chartName}"`).code !== 0) {
+      if (exec(`helm repo index "${releasesLocation}"`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be indexed in the desired repo`);
       }
       exec(`git config --local user.name ${githubUsername}`);
