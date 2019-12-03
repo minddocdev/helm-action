@@ -88,6 +88,9 @@ async function run() {
         https://${context.actor}:${githubToken}@github.com/
         ${context.repo.owner}/${context.repo.repo}
       `;
+      if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
+        throw new Error(`Chart ${chartName} package could not be pushed to git`);
+      }
       if (exec(`git push "${repository}" HEAD:${context.ref} --follow-tags`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be pushed to git`);
       }
