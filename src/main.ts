@@ -74,20 +74,23 @@ async function run() {
       exec(`git config --local github.user ${githubUser}`);
       const version = exec(
         `helm inspect chart "${chartsLocation}/${chartName}" | grep ^version | tr -d 'version: ' `,
-      ).stdout;
-      core.info(`Preparing release commit for ${chartName} chart with version ${version}`);
-      exec(oneLine`
+      ).stdout.trim();
+      core.info(`Preparing release commit for ${chartName} chart with ${version} version`);
+      if (exec(oneLine`
         git add
-          "${releasesLocation}/${chartName}/index.yaml"
+          "${releasesLocation}/index.yaml"
           "${releasesLocation}/${chartName}/${chartName}-${version}.tgz"
-      `);
+      `).code !== 0) {
+        throw new Error(`Chart ${chartName} package could not be added to git`);
+      }
       exec(`git commit -m "Release ${chartName} package with version ${version}"`);
-      // exec(`git tag "chart-${chartName}-${version}-${context.sha}"`);
       const repository = oneLineTrim`
         https://${context.actor}:${githubToken}@github.com/
         ${context.repo.owner}/${context.repo.repo}
       `;
-      exec(`git push "${repository}" HEAD:${context.ref} --follow-tags`);
+      if (exec(`git push "${repository}" HEAD:${context.ref} --follow-tags`).code !== 0) {
+        throw new Error(`Chart ${chartName} package could not be pushed to git`);
+      }
     }
   } catch (error) {
     core.setFailed(error.message);
