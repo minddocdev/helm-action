@@ -77,12 +77,6 @@ async function run() {
         https://${context.actor}:${githubToken}@github.com/
         ${context.repo.owner}/${context.repo.repo}
       `;
-      if (rebase) {
-        if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
-          throw new Error(`Repository ${repository} could not be re-based by git`);
-        }
-        exec(`git rebase ${context.ref}`);
-      }
       const version = exec(
         `helm inspect chart "${chartsLocation}/${chartName}" | grep ^version | tr -d 'version: ' `,
       ).stdout.trim();
@@ -95,6 +89,12 @@ async function run() {
         throw new Error(`Chart ${chartName} package could not be added to git`);
       }
       exec(`git commit -m "Release ${chartName} package with version ${version}"`);
+      if (rebase) {
+        if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
+          throw new Error(`Repository ${repository} could not be re-based by git`);
+        }
+        exec(`git rebase ${context.ref}`);
+      }
       if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be pushed to git`);
       }
