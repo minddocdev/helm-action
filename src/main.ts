@@ -32,6 +32,7 @@ async function run() {
     const githubUsername = core.getInput('githubUsername') || 'Android 18';
     const githubToken = core.getInput('githubToken');
     const publish = core.getInput('publish') === 'true' || false;
+    const rebase = core.getInput('rebase') === 'true' || false;
     const releasesLocation = core.getInput('releasesLocation') || 'helm/releases';
 
     core.info(`Updating ${chartName} chart dependencies`);
@@ -72,6 +73,9 @@ async function run() {
       exec(`git config --local user.email ${githubEmail}`);
       exec(`git config --local github.email ${githubEmail}`);
       exec(`git config --local github.user ${githubUser}`);
+      if (rebase) {
+        exec(`git rebase ${context.ref}`);
+      }
       const version = exec(
         `helm inspect chart "${chartsLocation}/${chartName}" | grep ^version | tr -d 'version: ' `,
       ).stdout.trim();
