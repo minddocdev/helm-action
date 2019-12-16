@@ -23,7 +23,7 @@ inputs:
     description: "The github token to use for pushing package commits"
     required: false
   rebase:
-    description: "Rebase before publishing"
+    description: "Rebase master into the current branch before publishing"
     default: false
   publish:
     description: "Package and publish chart"

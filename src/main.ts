@@ -74,7 +74,7 @@ async function run() {
       exec(`git config --local github.email ${githubEmail}`);
       exec(`git config --local github.user ${githubUser}`);
       if (rebase) {
-        exec(`git rebase ${context.ref}`);
+        exec('git rebase master');
       }
       const version = exec(
         `helm inspect chart "${chartsLocation}/${chartName}" | grep ^version | tr -d 'version: ' `,
