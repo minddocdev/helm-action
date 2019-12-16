@@ -35,6 +35,17 @@ async function run() {
     const rebase = core.getInput('rebase') === 'true' || false;
     const releasesLocation = core.getInput('releasesLocation') || 'helm/releases';
 
+    const repository = oneLineTrim`
+        https://${context.actor}:${githubToken}@github.com/
+        ${context.repo.owner}/${context.repo.repo}
+      `;
+    if (rebase) {
+      if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
+        throw new Error(`Repository ${repository} could not be re-based by git`);
+      }
+      exec(`git rebase ${context.ref}`);
+    }
+
     core.info(`Updating ${chartName} chart dependencies`);
     if (exec(`helm dependency update ${chartsLocation}/${chartName}`).code !== 0) {
       throw new Error(`Unable to update ${chartName} helm dependencies`);
@@ -73,10 +84,6 @@ async function run() {
       exec(`git config --local user.email ${githubEmail}`);
       exec(`git config --local github.email ${githubEmail}`);
       exec(`git config --local github.user ${githubUser}`);
-      const repository = oneLineTrim`
-        https://${context.actor}:${githubToken}@github.com/
-        ${context.repo.owner}/${context.repo.repo}
-      `;
       const version = exec(
         `helm inspect chart "${chartsLocation}/${chartName}" | grep ^version | tr -d 'version: ' `,
       ).stdout.trim();
@@ -89,12 +96,6 @@ async function run() {
         throw new Error(`Chart ${chartName} package could not be added to git`);
       }
       exec(`git commit -m "Release ${chartName} package with version ${version}"`);
-      if (rebase) {
-        if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
-          throw new Error(`Repository ${repository} could not be re-based by git`);
-        }
-        exec(`git rebase ${context.ref}`);
-      }
       if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be pushed to git`);
       }
