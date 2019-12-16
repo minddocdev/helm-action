@@ -73,8 +73,14 @@ async function run() {
       exec(`git config --local user.email ${githubEmail}`);
       exec(`git config --local github.email ${githubEmail}`);
       exec(`git config --local github.user ${githubUser}`);
+      const repository = oneLineTrim`
+        https://${context.actor}:${githubToken}@github.com/
+        ${context.repo.owner}/${context.repo.repo}
+      `;
       if (rebase) {
-        exec('git fetch upstream');
+        if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
+          throw new Error(`Repository ${repository} could not be re-based by git`);
+        }
         exec(`git rebase ${context.ref}`);
       }
       const version = exec(
@@ -89,10 +95,6 @@ async function run() {
         throw new Error(`Chart ${chartName} package could not be added to git`);
       }
       exec(`git commit -m "Release ${chartName} package with version ${version}"`);
-      const repository = oneLineTrim`
-        https://${context.actor}:${githubToken}@github.com/
-        ${context.repo.owner}/${context.repo.repo}
-      `;
       if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be pushed to git`);
       }
