@@ -95,7 +95,9 @@ async function run() {
       `).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be added to git`);
       }
-      exec(`git commit -m "Release ${chartName} package with version ${version}"`);
+      exec(
+        `git commit -m "feat(${chartName}): release chart version ${version}"`
+      );
       if (exec(`git pull "${repository}" HEAD:${context.ref}`).code !== 0) {
         throw new Error(`Chart ${chartName} package could not be pushed to git`);
       }
