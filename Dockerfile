@@ -14,7 +14,7 @@ LABEL version="0.0.1"
 LABEL repository="https://github.com/minddocdev/ci-actions/deploy"
 LABEL maintainer="MindDoc Health GmbH"
 
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nghttp2-dev nodejs npm
 
 COPY lib/ /usr/src/
 COPY package.json /usr/src
