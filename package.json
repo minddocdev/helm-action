@@ -24,7 +24,7 @@
     "@actions/core": "^1.2.0",
     "@actions/github": "^1.1.0",
     "common-tags": "^1.8.0",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.0",
